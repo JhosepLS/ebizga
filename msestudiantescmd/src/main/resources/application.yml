@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: msestudiantescmd
+  datasource:
+    url: jdbc:postgresql://localhost:5432/estudiantes
+    username: postgres
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
