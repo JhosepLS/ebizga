@@ -5,6 +5,8 @@ import org.ebiz.msestudiantescmd.model.Estudiante;
 import org.ebiz.msestudiantescmd.repository.AulaJpaRepository;
 import org.ebiz.msestudiantescmd.repository.EstudianteJpaRepository;
 import org.ebiz.msestudiantescmd.service.EstudianteServiceInterface;
+import org.ebiz.msestudiantescmd.service.exception.BusinessException;
+import org.ebiz.msestudiantescmd.service.exception.ErrorCodeEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -89,6 +91,10 @@ public class EstudianteServiceImpl implements EstudianteServiceInterface {
 
     @Override
     public Aula guardarAula(Aula aula) {
+        Optional<Aula> aulaExistePorCodigo = aulaRepo.findByCodigo(aula.getCodigo());
+        if (aulaExistePorCodigo.isPresent()) {
+            throw new BusinessException(ErrorCodeEnum.AULA_CODIGO_EN_USO);
+        }
         return aulaRepo.save(aula);
     }
 
