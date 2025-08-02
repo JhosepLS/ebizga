@@ -1,0 +1,53 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h5>Lista de Libros</h5>
+      </div>
+      <div class="card-body">
+        
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar libro..."
+              [(ngModel)]="filtroTitulo"
+              (input)="filtrarLibros()">
+          </div>
+        </div>
+
+        <div *ngIf="librosFiltrados.length > 0; else noLibros" class="row">
+          <div *ngFor="let libro of librosFiltrados" class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title">{{libro.titulo}}</h6>
+                <p class="card-text">
+                  <strong>Autor:</strong> {{libro.autor}}<br>
+                  <strong>Codigo:</strong> {{libro.codigo}}<br>
+                  <strong>Stock:</strong> {{libro.stock}}
+                </p>
+                <button 
+                  *ngIf="libro.stock > 0"
+                  class="btn btn-primary btn-sm"
+                  [routerLink]="['/crear-reserva']">
+                  Reservar
+                </button>
+                <span *ngIf="libro.stock === 0" class="text-muted">
+                  No disponible
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noLibros>
+          <div class="alert alert-info">
+            No se encontraron libros
+          </div>
+        </ng-template>
+
+      </div>
+    </div>
+  </div>
+</div>

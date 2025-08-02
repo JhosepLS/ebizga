@@ -1,0 +1,105 @@
+<div class="row">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h5>Crear Libro</h5>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="formLibro" (ngSubmit)="crear()">
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Titulo</label>
+              <input 
+                type="text" 
+                class="form-control"
+                [class.is-invalid]="tituloInvalido"
+                formControlName="titulo">
+              <div *ngIf="tituloInvalido" class="invalid-feedback">
+                <small>Titulo obligatorio</small>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Codigo</label>
+              <input 
+                type="text" 
+                class="form-control"
+                [class.is-invalid]="codigoInvalido"
+                formControlName="codigo">
+              <div *ngIf="codigoInvalido" class="invalid-feedback">
+                <small>Codigo obligatorio</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Autor</label>
+              <input 
+                type="text" 
+                class="form-control"
+                [class.is-invalid]="autorInvalido"
+                formControlName="autor">
+              <div *ngIf="autorInvalido" class="invalid-feedback">
+                <small>Autor obligatorio</small>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Stock</label>
+              <input 
+                type="number" 
+                class="form-control"
+                [class.is-invalid]="stockInvalido"
+                formControlName="stock">
+              <div *ngIf="stockInvalido" class="invalid-feedback">
+                <small>Stock debe ser mayor a 0</small>
+              </div>
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            class="btn btn-success"
+            [disabled]="!formLibro.valid">
+            Crear Libro
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h6>Libros Creados</h6>
+      </div>
+      <div class="card-body">
+        <table class="table table-striped" *ngIf="libros.length > 0; else noLibros">
+          <thead>
+            <tr>
+              <th>Codigo</th>
+              <th>Titulo</th>
+              <th>Autor</th>
+              <th>Stock</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let libro of libros">
+              <td>{{libro.codigo}}</td>
+              <td>{{libro.titulo}}</td>
+              <td>{{libro.autor}}</td>
+              <td>{{libro.stock}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <ng-template #noLibros>
+          <p class="text-muted">No hay libros creados</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

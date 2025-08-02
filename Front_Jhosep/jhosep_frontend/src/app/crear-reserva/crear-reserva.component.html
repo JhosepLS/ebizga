@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5>Reservar Libro</h5>
+      </div>
+      <div class="card-body">
+        
+        <form [formGroup]="formReserva" (ngSubmit)="crear()">
+          
+          <div class="mb-3">
+            <label class="form-label">Usuario</label>
+            <select 
+              class="form-select"
+              [class.is-invalid]="usuarioInvalido"
+              formControlName="usuarioId">
+              <option value="">Seleccione usuario</option>
+              <option *ngFor="let usuario of usuarios" [value]="usuario.id">
+                {{usuario.nombre}}
+              </option>
+            </select>
+            <div *ngIf="usuarioInvalido" class="invalid-feedback">
+              Seleccione un usuario
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Libro</label>
+            <select 
+              class="form-select"
+              [class.is-invalid]="libroInvalido"
+              formControlName="libroId">
+              <option value="">Seleccione libro</option>
+              <option *ngFor="let libro of librosDisponibles" [value]="libro.id">
+                {{libro.titulo}} (Stock: {{libro.stock}})
+              </option>
+            </select>
+            <div *ngIf="libroInvalido" class="invalid-feedback">
+              Seleccione un libro
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            class="btn btn-success"
+            [disabled]="!formReserva.valid || cargando">
+            <span *ngIf="cargando">Procesando...</span>
+            <span *ngIf="!cargando">Reservar</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

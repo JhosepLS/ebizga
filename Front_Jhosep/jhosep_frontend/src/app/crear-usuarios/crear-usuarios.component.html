@@ -1,0 +1,73 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5>Crear Usuario</h5>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="formUsuario" (ngSubmit)="crear()">
+          
+          <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input 
+              type="text" 
+              class="form-control"
+              [class.is-invalid]="nombreInvalido"
+              formControlName="nombre">
+            <div *ngIf="nombreInvalido" class="invalid-feedback">
+              <small *ngIf="formUsuario.get('nombre')?.errors?.['required']">
+                El nombre es obligatorio
+              </small>
+              <small *ngIf="formUsuario.get('nombre')?.errors?.['minlength']">
+                Minimo 2 caracteres
+              </small>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Correo</label>
+            <input 
+              type="email" 
+              class="form-control"
+              [class.is-invalid]="correoInvalido"
+              formControlName="correo">
+            <div *ngIf="correoInvalido" class="invalid-feedback">
+              <small *ngIf="formUsuario.get('correo')?.errors?.['required']">
+                El correo es obligatorio
+              </small>
+              <small *ngIf="formUsuario.get('correo')?.errors?.['email']">
+                Formato de correo invalido
+              </small>
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="!formUsuario.valid">
+            Crear Usuario
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h6>Usuarios Creados</h6>
+      </div>
+      <div class="card-body">
+        <ul class="list-group" *ngIf="usuarios.length > 0; else noUsuarios">
+          <li class="list-group-item" *ngFor="let usuario of usuarios">
+            <strong>{{usuario.nombre}}</strong><br>
+            <small>{{usuario.correo}}</small>
+          </li>
+        </ul>
+        <ng-template #noUsuarios>
+          <p class="text-muted">No hay usuarios creados</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
