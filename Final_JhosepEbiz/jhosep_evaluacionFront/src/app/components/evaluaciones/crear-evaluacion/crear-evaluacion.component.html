@@ -1,0 +1,66 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Nueva Evaluación</h2>
+        <button class="btn btn-secondary" routerLink="/evaluaciones">
+          <i class="bi bi-arrow-left"></i> Volver
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="evaluacionForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="cicloId" class="form-label">Ciclo de Evaluación</label>
+              <select
+                class="form-select"
+                id="cicloId"
+                formControlName="cicloId"
+                [class.is-invalid]="evaluacionForm.get('cicloId')?.invalid && evaluacionForm.get('cicloId')?.touched">
+                <option value="">Seleccione un ciclo</option>
+                <option *ngFor="let ciclo of ciclos" [value]="ciclo.id">
+                  {{ciclo.nombre}} ({{ciclo.fechaInicio | date:'shortDate'}} - {{ciclo.fechaFin | date:'shortDate'}})
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="evaluacionForm.get('cicloId')?.invalid && evaluacionForm.get('cicloId')?.touched">
+                Debe seleccionar un ciclo
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="evaluadoId" class="form-label">Empleado a Evaluar</label>
+              <select
+                class="form-select"
+                id="evaluadoId"
+                formControlName="evaluadoId"
+                [class.is-invalid]="evaluacionForm.get('evaluadoId')?.invalid && evaluacionForm.get('evaluadoId')?.touched">
+                <option value="">Seleccione un empleado</option>
+                <option *ngFor="let usuario of empleados" [value]="usuario.id">
+                  {{usuario.nombre}} {{usuario.apellido}} - {{usuario.cargo}}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="evaluacionForm.get('evaluadoId')?.invalid && evaluacionForm.get('evaluadoId')?.touched">
+                Debe seleccionar un empleado
+              </div>
+            </div>
+
+            <div class="d-grid">
+              <button 
+                type="submit" 
+                class="btn btn-primary"
+                [disabled]="evaluacionForm.invalid || loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                Crear Evaluación
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

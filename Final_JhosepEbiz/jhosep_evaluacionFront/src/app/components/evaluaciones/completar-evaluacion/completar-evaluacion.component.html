@@ -1,0 +1,164 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Completar Evaluación</h2>
+        <button class="btn btn-secondary" routerLink="/evaluaciones">
+          <i class="bi bi-arrow-left"></i> Volver
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="evaluacion">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>Información de la Evaluación</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Empleado:</strong> {{evaluacion.evaluado.nombre}} {{evaluacion.evaluado.apellido}}</p>
+              <p><strong>Cargo:</strong> {{evaluacion.evaluado.cargo}}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Ciclo:</strong> {{evaluacion.ciclo.nombre}}</p>
+              <p><strong>Período:</strong> {{evaluacion.ciclo.fechaInicio | date:'shortDate'}} - {{evaluacion.ciclo.fechaFin | date:'shortDate'}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="evaluacionForm" (ngSubmit)="onSubmit()">
+            
+            <!-- Sección de Metas -->
+            <div class="mb-4">
+              <h5 class="border-bottom pb-2">Evaluación por Metas</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Meta 1: Cumplimiento de Objetivos</label>
+                    <input type="range" class="form-range" min="0" max="100" formControlName="meta1" 
+                           (input)="actualizarValorMeta(1, $event)">
+                    <div class="d-flex justify-content-between">
+                      <small>0%</small>
+                      <small><strong>{{valorMeta1}}%</strong></small>
+                      <small>100%</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">Meta 2: Innovación y Mejora</label>
+                    <input type="range" class="form-range" min="0" max="100" formControlName="meta2"
+                           (input)="actualizarValorMeta(2, $event)">
+                    <div class="d-flex justify-content-between">
+                      <small>0%</small>
+                      <small><strong>{{valorMeta2}}%</strong></small>
+                      <small>100%</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección de Competencias -->
+            <div class="mb-4">
+              <h5 class="border-bottom pb-2">Evaluación por Competencias</h5>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">Trabajo en Equipo</label>
+                    <select class="form-select" formControlName="competencia1">
+                      <option value="">Seleccione</option>
+                      <option value="1">1 - Deficiente</option>
+                      <option value="2">2 - Regular</option>
+                      <option value="3">3 - Bueno</option>
+                      <option value="4">4 - Muy Bueno</option>
+                      <option value="5">5 - Excelente</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">Comunicación</label>
+                    <select class="form-select" formControlName="competencia2">
+                      <option value="">Seleccione</option>
+                      <option value="1">1 - Deficiente</option>
+                      <option value="2">2 - Regular</option>
+                      <option value="3">3 - Bueno</option>
+                      <option value="4">4 - Muy Bueno</option>
+                      <option value="5">5 - Excelente</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="form-label">Liderazgo</label>
+                    <select class="form-select" formControlName="competencia3">
+                      <option value="">Seleccione</option>
+                      <option value="1">1 - Deficiente</option>
+                      <option value="2">2 - Regular</option>
+                      <option value="3">3 - Bueno</option>
+                      <option value="4">4 - Muy Bueno</option>
+                      <option value="5">5 - Excelente</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Retroalimentación -->
+            <div class="mb-4">
+              <h5 class="border-bottom pb-2">Retroalimentación</h5>
+              <div class="mb-3">
+                <label for="retroalimentacion" class="form-label">Comentarios y Observaciones</label>
+                <textarea
+                  class="form-control"
+                  id="retroalimentacion"
+                  rows="5"
+                  formControlName="retroalimentacion"
+                  placeholder="Escriba sus comentarios sobre el desempeño del empleado...">
+                </textarea>
+              </div>
+            </div>
+
+            <!-- Puntuación Final -->
+            <div class="mb-4">
+              <div class="card bg-light">
+                <div class="card-body">
+                  <h5>Puntuación Final Calculada: <span class="text-primary">{{puntuacionFinal}}/100</span></h5>
+                  <div class="progress">
+                    <div class="progress-bar" 
+                         [style.width.%]="puntuacionFinal"
+                         [class.bg-danger]="puntuacionFinal < 60"
+                         [class.bg-warning]="puntuacionFinal >= 60 && puntuacionFinal < 80"
+                         [class.bg-success]="puntuacionFinal >= 80">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid">
+              <button 
+                type="submit" 
+                class="btn btn-success btn-lg"
+                [disabled]="evaluacionForm.invalid || loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                Completar Evaluación
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

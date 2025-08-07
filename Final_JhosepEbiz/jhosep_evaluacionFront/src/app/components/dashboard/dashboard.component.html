@@ -1,0 +1,96 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h2>Dashboard - Bienvenido {{currentUser?.nombre}} {{currentUser?.apellido}}</h2>
+      <p class="text-muted">Rol: {{(currentUser?.rol || '') | rolUsuario}}</p>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-3">
+      <div class="card text-white bg-primary">
+        <div class="card-body">
+          <h5 class="card-title">Total Evaluaciones</h5>
+          <h2>{{totalEvaluaciones}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-success">
+        <div class="card-body">
+          <h5 class="card-title">Completadas</h5>
+          <h2>{{evaluacionesCompletadas}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-warning">
+        <div class="card-body">
+          <h5 class="card-title">Pendientes</h5>
+          <h2>{{evaluacionesPendientes}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-info">
+        <div class="card-body">
+          <h5 class="card-title">Ciclos Activos</h5>
+          <h2>{{ciclosActivos}}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5>Acciones Rápidas</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary" routerLink="/evaluaciones/crear" *ngIf="currentUser?.rol !== 'EMPLEADO'">
+              Nueva Evaluación
+            </button>
+            <button class="btn btn-success" routerLink="/ciclos/crear" *ngIf="currentUser?.rol === 'ADMIN'">
+              Nuevo Ciclo
+            </button>
+            <button class="btn btn-info" routerLink="/evaluaciones">
+              Ver Evaluaciones
+            </button>
+            <button class="btn btn-secondary" routerLink="/ciclos">
+              Ver Ciclos
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5>Evaluaciones Recientes</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="evaluacionesRecientes.length === 0" class="text-muted">
+            No hay evaluaciones recientes
+          </div>
+          <div *ngFor="let evaluacion of evaluacionesRecientes" class="border-bottom pb-2 mb-2">
+            <small class="text-muted">{{evaluacion.fechaCreacion | date:'short'}}</small>
+            <div>
+              <strong>{{evaluacion.evaluado.nombre}} {{evaluacion.evaluado.apellido}}</strong>
+            </div>
+            <div>
+              <span class="badge" 
+                    [class.bg-warning]="evaluacion.estado === 'PENDIENTE'"
+                    [class.bg-info]="evaluacion.estado === 'EN_PROGRESO'"
+                    [class.bg-success]="evaluacion.estado === 'COMPLETADA'"
+                    [class.bg-primary]="evaluacion.estado === 'FIRMADA'">
+                {{evaluacion.estado | estadoEvaluacion}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

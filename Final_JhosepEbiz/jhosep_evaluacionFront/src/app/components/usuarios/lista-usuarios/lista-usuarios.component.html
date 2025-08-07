@@ -1,0 +1,151 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Gestión de Usuarios</h2>
+        <button class="btn btn-primary" routerLink="/register">
+          Nuevo Usuario
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <!-- Filtros -->
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label for="filtroRol" class="form-label">Filtrar por Rol</label>
+              <select class="form-select" id="filtroRol" [(ngModel)]="filtroRol" (change)="aplicarFiltros()">
+                <option value="">Todos los roles</option>
+                <option value="ADMIN">Administrador</option>
+                <option value="EVALUADOR">Evaluador</option>
+                <option value="EMPLEADO">Empleado</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="buscar" class="form-label">Buscar</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="buscar" 
+                placeholder="Buscar por nombre o email..."
+                [(ngModel)]="textoBusqueda"
+                (input)="aplicarFiltros()">
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+              <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
+                Limpiar Filtros
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre Completo</th>
+                  <th>Email</th>
+                  <th>Rol</th>
+                  <th>Cargo</th>
+                  <th>Fecha Registro</th>
+                  <th>Evaluaciones</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let usuario of usuariosFiltrados">
+                  <td>{{usuario.id}}</td>
+                  <td>{{usuario.nombre}} {{usuario.apellido}}</td>
+                  <td>{{usuario.email}}</td>
+                  <td>
+                    <span class="badge"
+                          [class.bg-danger]="usuario.rol === 'ADMIN'"
+                          [class.bg-warning]="usuario.rol === 'EVALUADOR'"
+                          [class.bg-info]="usuario.rol === 'EMPLEADO'">
+                      {{usuario.rol | rolUsuario}}
+                    </span>
+                  </td>
+                  <td>{{usuario.cargo || 'N/A'}}</td>
+                  <td>{{usuario.fechaCreacion | date:'short'}}</td>
+                  <td>
+                    <span class="badge bg-secondary">{{contarEvaluaciones(usuario.id)}}</span>
+                  </td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <button 
+                        class="btn btn-outline-info"
+                        (click)="verDetalle(usuario)">
+                        Ver
+                      </button>
+                      <button 
+                        class="btn btn-outline-danger"
+                        (click)="eliminar(usuario.id)"
+                        [disabled]="usuario.id === currentUser?.id">
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div *ngIf="usuariosFiltrados.length === 0" class="text-center text-muted py-4">
+            No se encontraron usuarios
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal detalle usuario -->
+<div class="modal fade" id="detalleUsuarioModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Detalle del Usuario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" *ngIf="usuarioSeleccionado">
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Información Personal</h6>
+            <p><strong>Nombre:</strong> {{usuarioSeleccionado.nombre}} {{usuarioSeleccionado.apellido}}</p>
+            <p><strong>Email:</strong> {{usuarioSeleccionado.email}}</p>
+            <p><strong>Cargo:</strong> {{usuarioSeleccionado.cargo || 'N/A'}}</p>
+            <p><strong>Rol:</strong> 
+              <span class="badge"
+                    [class.bg-danger]="usuarioSeleccionado.rol === 'ADMIN'"
+                    [class.bg-warning]="usuarioSeleccionado.rol === 'EVALUADOR'"
+                    [class.bg-info]="usuarioSeleccionado.rol === 'EMPLEADO'">
+                {{usuarioSeleccionado.rol | rolUsuario}}
+              </span>
+            </p>
+            <p><strong>Fecha de Registro:</strong> {{usuarioSeleccionado.fechaCreacion | date:'fullDate'}}</p>
+          </div>
+          <div class="col-md-6">
+            <h6>Estadísticas de Evaluaciones</h6>
+            <div class="row text-center">
+              <div class="col-6">
+                <h4 class="text-primary">{{contarEvaluacionesRecibidas(usuarioSeleccionado.id)}}</h4>
+                <small>Evaluaciones Recibidas</small>
+              </div>
+              <div class="col-6">
+                <h4 class="text-success">{{contarEvaluacionesRealizadas(usuarioSeleccionado.id)}}</h4>
+                <small>Evaluaciones Realizadas</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

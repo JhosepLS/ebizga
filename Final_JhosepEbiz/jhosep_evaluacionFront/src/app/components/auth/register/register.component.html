@@ -1,0 +1,114 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="text-center">Registrarse</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="nombre"
+                    formControlName="nombre"
+                    [class.is-invalid]="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched">
+                  <div class="invalid-feedback" *ngIf="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched">
+                    Nombre es requerido
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="apellido" class="form-label">Apellido</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="apellido"
+                    formControlName="apellido"
+                    [class.is-invalid]="registerForm.get('apellido')?.invalid && registerForm.get('apellido')?.touched">
+                  <div class="invalid-feedback" *ngIf="registerForm.get('apellido')?.invalid && registerForm.get('apellido')?.touched">
+                    Apellido es requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                formControlName="email"
+                [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+              <div class="invalid-feedback" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+                Email es requerido y debe ser válido
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Contraseña</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                formControlName="password"
+                [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+              <div class="invalid-feedback" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+                Contraseña es requerida (mínimo 6 caracteres)
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="rol" class="form-label">Rol</label>
+                  <select
+                    class="form-select"
+                    id="rol"
+                    formControlName="rol"
+                    [class.is-invalid]="registerForm.get('rol')?.invalid && registerForm.get('rol')?.touched">
+                    <option value="">Seleccione un rol</option>
+                    <option value="EMPLEADO">Empleado</option>
+                    <option value="EVALUADOR">Evaluador</option>
+                    <option value="ADMIN">Administrador</option>
+                  </select>
+                  <div class="invalid-feedback" *ngIf="registerForm.get('rol')?.invalid && registerForm.get('rol')?.touched">
+                    Rol es requerido
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="cargo" class="form-label">Cargo</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cargo"
+                    formControlName="cargo">
+                </div>
+              </div>
+            </div>
+
+            <button 
+              type="submit" 
+              class="btn btn-primary w-100"
+              [disabled]="registerForm.invalid || loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+              Registrarse
+            </button>
+          </form>
+
+          <div class="text-center mt-3">
+            <a routerLink="/login" class="text-decoration-none">¿Ya tienes cuenta? Inicia sesión</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

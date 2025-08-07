@@ -74,31 +74,23 @@ export class CrearReservaComponent implements OnInit {
     if (!this.formReserva.valid) return;
 
     this.cargando = true;
-    const { usuarioId, libroId } = this.formReserva.value;
-
+    const { usuarioId, libroId }= this.formReserva.value;
+    
     this.reservaService.crear(usuarioId, libroId).subscribe({
-      next: (response: any) => {
+      next : (response : any) => {
         this.cargando = false;
         Swal.fire({
           icon: 'success',
-          title: '¡Reserva Exitosa!',
+          title: 'se reservo',
           text: response.message,
-          showConfirmButton: true
+          showConfirmButton: true,
         });
         this.formReserva.reset();
         this.cargarLibrosDisponibles();
       },
-      error: (error: any) => {
-        this.cargando = false;
-        const errorResponse = error.error as ApiResponse<any>;
-        Swal.fire({
-          icon: 'error',
-          title: errorResponse.errorCode || 'Error',
-          text: errorResponse.message || 'Error al crear reserva'
-        });
-      }
-    });
-  }
+    })
+  
+    }
 
   get usuarioInvalido(): boolean {
     const campo = this.formReserva.get('usuarioId');
