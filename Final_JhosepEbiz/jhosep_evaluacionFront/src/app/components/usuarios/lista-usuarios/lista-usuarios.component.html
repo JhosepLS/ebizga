@@ -82,6 +82,11 @@
                         Ver
                       </button>
                       <button 
+                        class="btn btn-outline-info btn-sm"
+                        (click)="verEvaluacionesUsuario(usuario)">
+                        📊 Ver Evaluaciones
+                      </button>
+                      <button 
                         class="btn btn-outline-danger"
                         (click)="eliminar(usuario.id)"
                         [disabled]="usuario.id === currentUser?.id">
@@ -141,6 +146,59 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal para ver evaluaciones del usuario -->
+<div class="modal fade" id="evaluacionesUsuarioModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" *ngIf="usuarioSeleccionado">
+          📊 Evaluaciones de {{usuarioSeleccionado.nombre}} {{usuarioSeleccionado.apellido}}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="evaluacionesUsuario.length === 0" class="text-center text-muted py-4">
+          Este usuario no tiene evaluaciones registradas
+        </div>
+        
+        <div *ngIf="evaluacionesUsuario.length > 0" class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th class="text-center">ID</th>
+                <th class="text-center">Ciclo</th>
+                <th class="text-center">Tipo</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Puntuación</th>
+                <th class="text-center">Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let evaluacion of evaluacionesUsuario">
+                <td class="text-center">{{evaluacion.id}}</td>
+                <td class="text-center">{{evaluacion.ciclo.nombre}}</td>
+                <td class="text-center">{{evaluacion.tipo}}</td>
+                <td class="text-center">
+                  <span class="badge" 
+                        [class.bg-warning]="evaluacion.estado === 'PENDIENTE'"
+                        [class.bg-success]="evaluacion.estado === 'COMPLETADA'"
+                        [class.bg-primary]="evaluacion.estado === 'FIRMADA'">
+                    {{evaluacion.estado | estadoEvaluacion}}
+                  </span>
+                </td>
+                <td class="text-center">{{evaluacion.puntuacionFinal || 'N/A'}}</td>
+                <td class="text-center">{{evaluacion.fechaCreacion | date:'short'}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
       <div class="modal-footer">

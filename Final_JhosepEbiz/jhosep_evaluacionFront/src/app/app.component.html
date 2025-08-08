@@ -6,6 +6,7 @@
       <div class="navbar-nav ms-auto">
         <a class="nav-link" routerLink="/dashboard">Dashboard</a>
         <a class="nav-link" routerLink="/evaluaciones">Evaluaciones</a>
+        <a class="nav-link" routerLink="/mis-evaluaciones">Mis Evaluaciones</a>
         <a class="nav-link" routerLink="/ciclos">Ciclos</a>
         <a class="nav-link" routerLink="/usuarios" *ngIf="currentUser?.rol === 'ADMIN'">Usuarios</a>
         <a class="nav-link" href="#" (click)="logout()">Cerrar Sesión</a>

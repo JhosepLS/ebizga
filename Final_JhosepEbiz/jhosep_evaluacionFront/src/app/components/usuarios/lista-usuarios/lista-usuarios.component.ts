@@ -8,6 +8,7 @@ import { AuthService } from '../../../services/auth.service';
 import { Usuario } from '../../../models/usuario.model';
 import { Evaluacion } from '../../../models/evaluacion.model';
 import { RolUsuarioPipe } from '../../../pipes/rol-usuario.pipe';
+import { EstadoEvaluacionPipe } from '../../../pipes/estado-evaluacion.pipe';
 import Swal from 'sweetalert2';
 
 declare var bootstrap: any;
@@ -15,15 +16,17 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-lista-usuarios',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, RolUsuarioPipe],
+  imports: [CommonModule, FormsModule, RouterLink, RolUsuarioPipe, EstadoEvaluacionPipe],
   templateUrl: './lista-usuarios.component.html'
 })
+
 export class ListaUsuariosComponent implements OnInit {
   usuarios: Usuario[] = [];
   usuariosFiltrados: Usuario[] = [];
   evaluaciones: Evaluacion[] = [];
   currentUser: Usuario | null = null;
   usuarioSeleccionado: Usuario | null = null;
+  evaluacionesUsuario: Evaluacion[] = [];
   
   filtroRol: string = '';
   textoBusqueda: string = '';
@@ -121,6 +124,30 @@ export class ListaUsuariosComponent implements OnInit {
             Swal.fire('Error', 'No se pudo eliminar el usuario', 'error');
           }
         });
+      }
+    });
+  }
+
+  verEvaluacionesUsuario(usuario: Usuario) {
+    this.usuarioSeleccionado = usuario;
+    this.cargarEvaluacionesUsuario(usuario.id);
+    
+    // Esperar un poco antes de abrir el modal
+    setTimeout(() => {
+      const modalElement = document.getElementById('evaluacionesUsuarioModal');
+      if (modalElement) {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+      } else {
+        console.error('Modal evaluacionesUsuarioModal no encontrado');
+      }
+    }, 100);
+  }
+
+  cargarEvaluacionesUsuario(usuarioId: number) {
+    this.evaluacionService.obtenerEvaluacionesPorUsuario(usuarioId).subscribe({
+      next: (response) => {
+        this.evaluacionesUsuario = response.data;
       }
     });
   }

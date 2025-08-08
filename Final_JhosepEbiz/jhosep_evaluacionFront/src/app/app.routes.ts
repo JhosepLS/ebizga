@@ -8,6 +8,7 @@ import { CompletarEvaluacionComponent } from './components/evaluaciones/completa
 import { ListaCiclosComponent } from './components/ciclos/lista-ciclos/lista-ciclos.component';
 import { CrearCicloComponent } from './components/ciclos/crear-ciclo/crear-ciclo.component';
 import { ListaUsuariosComponent } from './components/usuarios/lista-usuarios/lista-usuarios.component';
+import { MisEvaluacionesComponent } from './components/evaluaciones/mis-evaluaciones/mis-evaluaciones.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -20,5 +21,6 @@ export const routes: Routes = [
   { path: 'evaluaciones/:id/completar', component: CompletarEvaluacionComponent, canActivate: [authGuard] },
   { path: 'ciclos', component: ListaCiclosComponent, canActivate: [authGuard] },
   { path: 'ciclos/crear', component: CrearCicloComponent, canActivate: [authGuard] },
-  { path: 'usuarios', component: ListaUsuariosComponent, canActivate: [authGuard] }
+  { path: 'usuarios', component: ListaUsuariosComponent, canActivate: [authGuard] },
+  { path: 'mis-evaluaciones', component: MisEvaluacionesComponent, canActivate: [authGuard] }
 ];

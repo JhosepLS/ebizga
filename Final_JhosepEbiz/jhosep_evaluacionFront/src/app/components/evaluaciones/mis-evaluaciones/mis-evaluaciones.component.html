@@ -1,0 +1,184 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h2>📋 Mis Evaluaciones</h2>
+      <p class="text-muted">Aquí puedes ver todas las evaluaciones en las que has participado</p>
+    </div>
+  </div>
+
+  <!-- Resumen estadístico -->
+  <div class="row mt-3">
+    <div class="col-md-3">
+      <div class="card text-white bg-primary">
+        <div class="card-body text-center">
+          <h5>Total</h5>
+          <h2>{{misEvaluaciones.length}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-success">
+        <div class="card-body text-center">
+          <h5>Completadas</h5>
+          <h2>{{contarPorEstado('COMPLETADA') + contarPorEstado('FIRMADA')}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-warning">
+        <div class="card-body text-center">
+          <h5>Pendientes</h5>
+          <h2>{{contarPorEstado('PENDIENTE')}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-info">
+        <div class="card-body text-center">
+          <h5>Promedio</h5>
+          <h2>{{calcularPromedio()}}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de evaluaciones -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5>📊 Historial de Evaluaciones</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="misEvaluaciones.length === 0" class="text-center text-muted py-4">
+            <i class="bi bi-inbox" style="font-size: 48px;"></i>
+            <p class="mt-3">No tienes evaluaciones registradas</p>
+          </div>
+
+          <div *ngIf="misEvaluaciones.length > 0" class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th class="text-center">ID</th>
+                  <th class="text-center">Ciclo</th>
+                  <th class="text-center">Mi Rol</th>
+                  <th class="text-center">Involucrado</th>
+                  <th class="text-center">Estado</th>
+                  <th class="text-center">Puntuación</th>
+                  <th class="text-center">Fecha</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let evaluacion of misEvaluaciones">
+                  <td class="text-center">{{evaluacion.id}}</td>
+                  <td class="text-center">{{evaluacion.ciclo.nombre}}</td>
+                  <td class="text-center">
+                    <span class="badge" 
+                          [class.bg-info]="esEvaluador(evaluacion)"
+                          [class.bg-secondary]="!esEvaluador(evaluacion)">
+                      {{esEvaluador(evaluacion) ? 'Evaluador' : 'Evaluado'}}
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <span *ngIf="esEvaluador(evaluacion)">
+                      {{evaluacion.evaluado.nombre}} {{evaluacion.evaluado.apellido}}
+                    </span>
+                    <span *ngIf="!esEvaluador(evaluacion)">
+                      {{evaluacion.evaluador.nombre}} {{evaluacion.evaluador.apellido}}
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <span class="badge" 
+                          [class.bg-warning]="evaluacion.estado === 'PENDIENTE'"
+                          [class.bg-info]="evaluacion.estado === 'EN_PROGRESO'"
+                          [class.bg-success]="evaluacion.estado === 'COMPLETADA'"
+                          [class.bg-primary]="evaluacion.estado === 'FIRMADA'">
+                      {{evaluacion.estado | estadoEvaluacion}}
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <span *ngIf="evaluacion.puntuacionFinal" class="">
+                      {{evaluacion.puntuacionFinal}}
+                    </span>
+                    <span *ngIf="!evaluacion.puntuacionFinal" class="text-muted">N/A</span>
+                  </td>
+                  <td class="text-center">{{evaluacion.fechaCreacion | date:'short'}}</td>
+                  <td class="text-center">
+                    <button 
+                      class="btn btn-sm btn-outline-info"
+                      (click)="verDetalleEvaluacion(evaluacion)">
+                      👁️ Ver
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal detalle evaluación -->
+<div class="modal fade" id="detalleEvaluacionModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">📄 Detalle de Evaluación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" *ngIf="evaluacionSeleccionada">
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Información General</h6>
+            <p><strong>ID:</strong> {{evaluacionSeleccionada.id}}</p>
+            <p><strong>Ciclo:</strong> {{evaluacionSeleccionada.ciclo.nombre}}</p>
+            <p><strong>Tipo:</strong> {{evaluacionSeleccionada.tipo}}</p>
+            <p><strong>Estado:</strong> 
+              <span class="badge" 
+                    [class.bg-warning]="evaluacionSeleccionada.estado === 'PENDIENTE'"
+                    [class.bg-success]="evaluacionSeleccionada.estado === 'COMPLETADA'"
+                    [class.bg-primary]="evaluacionSeleccionada.estado === 'FIRMADA'">
+                {{evaluacionSeleccionada.estado | estadoEvaluacion}}
+              </span>
+            </p>
+          </div>
+          <div class="col-md-6">
+            <h6>Participantes</h6>
+            <p><strong>Evaluado:</strong> {{evaluacionSeleccionada.evaluado.nombre}} {{evaluacionSeleccionada.evaluado.apellido}}</p>
+            <p><strong>Evaluador:</strong> {{evaluacionSeleccionada.evaluador.nombre}} {{evaluacionSeleccionada.evaluador.apellido}}</p>
+            <p><strong>Puntuación:</strong> 
+              <span *ngIf="evaluacionSeleccionada.puntuacionFinal" class="badge bg-dark">
+                {{evaluacionSeleccionada.puntuacionFinal}}/100
+              </span>
+              <span *ngIf="!evaluacionSeleccionada.puntuacionFinal">N/A</span>
+            </p>
+          </div>
+        </div>
+        
+        <div class="row mt-3" *ngIf="evaluacionSeleccionada.retroalimentacion">
+          <div class="col-12">
+            <h6>Retroalimentación</h6>
+            <div class="bg-light p-3 rounded">
+              {{evaluacionSeleccionada.retroalimentacion}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3" *ngIf="evaluacionSeleccionada.firmaImagen">
+          <div class="col-12 text-center">
+            <h6>Firma</h6>
+            <img [src]="evaluacionSeleccionada.firmaImagen" 
+                 class="img-fluid border rounded" 
+                 style="max-height: 200px; background: white;">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

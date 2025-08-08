@@ -6,14 +6,18 @@ import { AuthService } from '../../../services/auth.service';
 import { Evaluacion } from '../../../models/evaluacion.model';
 import { Usuario } from '../../../models/usuario.model';
 import { EstadoEvaluacionPipe } from '../../../pipes/estado-evaluacion.pipe';
+import { CicloEvaluacion } from '../../../models/ciclo-evaluacion.model';
 import Swal from 'sweetalert2';
+import { CicloService } from '../../../services/ciclo.service';
+import { UsuarioService } from '../../../services/usuario.service';
+import { FormsModule } from '@angular/forms';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-lista-evaluaciones',
   standalone: true,
-  imports: [CommonModule, RouterLink, EstadoEvaluacionPipe],
+  imports: [CommonModule, RouterLink, EstadoEvaluacionPipe, FormsModule],
   templateUrl: './lista-evaluaciones.component.html'
 })
 export class ListaEvaluacionesComponent implements OnInit, AfterViewInit {
@@ -36,14 +40,27 @@ export class ListaEvaluacionesComponent implements OnInit, AfterViewInit {
   // Variables para la imagen
   firmaImagenSubida: string = '';
 
+  filtros = {
+    estado: '',
+    cicloId: '',
+    evaluadorId: '',
+    evaluadoId: null
+  };
+  ciclos: CicloEvaluacion[] = [];
+  usuarios: Usuario[] = [];
+  
   constructor(
     private evaluacionService: EvaluacionService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cicloService: CicloService,
+    private usuarioService: UsuarioService
   ) {}
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
     this.cargarEvaluaciones();
+    this.cargarCiclos();
+    this.cargarUsuarios();
   }
 
   ngAfterViewInit() {
@@ -51,6 +68,29 @@ export class ListaEvaluacionesComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.inicializarCanvas();
     }, 200);
+  }
+
+  cargarCiclos() {
+    this.cicloService.obtenerCiclos().subscribe({
+      next: (response) => { this.ciclos = response.data; }
+    });
+  }
+
+  cargarUsuarios() {
+    this.usuarioService.obtenerUsuarios().subscribe({
+      next: (response) => { this.usuarios = response.data; }
+    });
+  }
+
+  aplicarFiltros() {
+    this.evaluacionService.filtrarEvaluaciones(this.filtros).subscribe({
+      next: (response) => { this.evaluaciones = response.data; }
+    });
+  }
+
+  limpiarFiltros() {
+    this.filtros = { estado: '', cicloId: '', evaluadorId: '', evaluadoId: null };
+    this.cargarEvaluaciones();
   }
 
   inicializarCanvas() {

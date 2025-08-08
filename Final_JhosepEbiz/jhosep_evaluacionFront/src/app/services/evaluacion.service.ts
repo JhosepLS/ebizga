@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../models/response.model';
 import { Evaluacion } from '../models/evaluacion.model';
@@ -34,5 +34,23 @@ export class EvaluacionService {
 
   eliminarEvaluacion(id: number): Observable<ApiResponse<any>> {
     return this.http.delete<ApiResponse<any>>(`${this.baseUrl}/${id}`);
+  }
+
+  obtenerEvaluacionesPorUsuario(usuarioId: number): Observable<ApiResponse<Evaluacion[]>> {
+  return this.http.get<ApiResponse<Evaluacion[]>>(`${this.baseUrl}/usuario/${usuarioId}`);
+}
+
+  obtenerMisEvaluaciones(): Observable<ApiResponse<Evaluacion[]>> {
+    return this.http.get<ApiResponse<Evaluacion[]>>(`${this.baseUrl}/mis-evaluaciones`);
+  }
+
+  filtrarEvaluaciones(filtros: any): Observable<ApiResponse<Evaluacion[]>> {
+    let params = new HttpParams();
+    if (filtros.estado) params = params.set('estado', filtros.estado);
+    if (filtros.cicloId) params = params.set('cicloId', filtros.cicloId.toString());
+    if (filtros.evaluadorId) params = params.set('evaluadorId', filtros.evaluadorId.toString());
+    if (filtros.evaluadoId) params = params.set('evaluadoId', filtros.evaluadoId.toString());
+    
+    return this.http.get<ApiResponse<Evaluacion[]>>(`${this.baseUrl}/filtrar`, { params });
   }
 }

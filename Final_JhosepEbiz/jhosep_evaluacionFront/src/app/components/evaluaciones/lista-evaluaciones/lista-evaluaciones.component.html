@@ -20,6 +20,40 @@
     <strong>ID:</strong> {{currentUser.id}}
   </div>
 
+    <!-- Panel de filtros -->
+  <div class="card mb-3">
+    <div class="card-header">
+      <h6>🔍 Filtros</h6>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-3">
+          <select class="form-select" [(ngModel)]="filtros.estado" (change)="aplicarFiltros()">
+            <option value="">Todos los estados</option>
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="COMPLETADA">Completada</option>
+            <option value="FIRMADA">Firmada</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <select class="form-select" [(ngModel)]="filtros.cicloId" (change)="aplicarFiltros()">
+            <option value="">Todos los ciclos</option>
+            <option *ngFor="let ciclo of ciclos" [value]="ciclo.id">{{ciclo.nombre}}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <select class="form-select" [(ngModel)]="filtros.evaluadorId" (change)="aplicarFiltros()">
+            <option value="">Todos los evaluadores</option>
+            <option *ngFor="let usuario of usuarios" [value]="usuario.id">{{usuario.nombre}} {{usuario.apellido}}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">Limpiar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-12">
       <div class="card">
@@ -28,28 +62,26 @@
             <table class="table table-hover">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Evaluado</th>
-                  <th>Evaluador</th>
-                  <th>Ciclo</th>
-                  <th>Estado</th>
-                  <th>Puntuación</th>
-                  <th>Fecha</th>
-                  <th>Acciones</th>
+                  <th class="text-center">ID</th>
+                  <th class="text-center">Evaluado</th>
+                  <th class="text-center">Evaluador</th>
+                  <th class="text-center">Ciclo</th>
+                  <th class="text-center">Estado</th>
+                  <th class="text-center">Puntuación</th>
+                  <th class="text-center">Fecha</th>
+                  <th class="text-center">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let evaluacion of evaluaciones">
-                  <td>{{evaluacion.id}}</td>
-                  <td>
+                  <td class="text-center">{{evaluacion.id}}</td>
+                  <td class="text-center">
                     {{evaluacion.evaluado.nombre}} {{evaluacion.evaluado.apellido}}
-                    <br><small class="text-muted">ID: {{evaluacion.evaluado.id}}</small>
                   </td>
-                  <td>
+                  <td class="text-center">
                     {{evaluacion.evaluador.nombre}} {{evaluacion.evaluador.apellido}}
-                    <br><small class="text-muted">ID: {{evaluacion.evaluador.id}}</small>
                   </td>
-                  <td>{{evaluacion.ciclo.nombre}}</td>
+                  <td class="text-center">{{evaluacion.ciclo.nombre}}</td>
                   <td>
                     <span class="badge" 
                           [class.bg-warning]="evaluacion.estado === 'PENDIENTE'"
@@ -59,10 +91,10 @@
                       {{evaluacion.estado | estadoEvaluacion}}
                     </span>
                   </td>
-                  <td>{{evaluacion.puntuacionFinal || 'N/A'}}</td>
-                  <td>{{evaluacion.fechaCreacion | date:'short'}}</td>
-                  <td>
-                    <div class="btn-group-vertical btn-group-sm">
+                  <td class="text-center">{{evaluacion.puntuacionFinal || 'N/A'}}</td>
+                  <td class="text-center">{{evaluacion.fechaCreacion | date:'short'}}</td>
+                  <td class="text-center">
+                    <div class="btn-group btn-group-sm">
                       <!-- Botón Completar -->
                       <button 
                         class="btn btn-outline-primary mb-1"
